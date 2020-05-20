@@ -32,7 +32,6 @@ public class FrmFornecedores extends javax.swing.JFrame {
                 c.getId(),
                 c.getNome(),
                 c.getCnpj(),
-                c.getCep(),
                 c.getEmail(),
                 c.getTelefone(),
                 c.getCelular(),

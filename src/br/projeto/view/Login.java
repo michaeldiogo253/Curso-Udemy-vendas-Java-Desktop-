@@ -5,6 +5,9 @@
  */
 package br.projeto.view;
 
+import br.com.projeto.dao.FuncionariosDAO;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author michael
@@ -36,7 +39,7 @@ public class Login extends javax.swing.JFrame {
         btnSair = new javax.swing.JButton();
         btnEntrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(600, 400));
         getContentPane().setLayout(null);
 
@@ -93,12 +96,34 @@ public class Login extends javax.swing.JFrame {
 
         btnEntrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnEntrar.setText("ENTRAR");
+        btnEntrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntrarActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnEntrar);
         btnEntrar.setBounds(150, 260, 100, 31);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+
+        try {
+            String email, senha;
+            email = txtEmail.getText();
+            senha = txtSenha.getText();
+
+            FuncionariosDAO dao = new FuncionariosDAO();
+            dao.efetuaLogin(email, senha);
+            this.dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "erro");
+        }
+
+
+    }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**
      * @param args the command line arguments
