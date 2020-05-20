@@ -4,6 +4,7 @@ import br.com.projeto.jdbc.ConnectionFactory;
 import br.com.projeto.model.Clientes;
 import br.com.projeto.model.Funcionarios;
 import br.projeto.view.FrmMenu;
+import br.projeto.view.Login;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -211,10 +212,12 @@ public class FuncionariosDAO {
             if(rs.next()){
                 JOptionPane.showMessageDialog(null, "Logado com sucesso!");
                 FrmMenu tela = new FrmMenu();
+                tela.usuarioLogado = rs.getString("nome");
                 tela.setVisible(true);
             }
             else{
                 JOptionPane.showMessageDialog(null, "Dados incorretos");
+                new Login().setVisible(true);
             }
             
         } catch (SQLException erro) {

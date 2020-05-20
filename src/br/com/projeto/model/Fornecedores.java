@@ -127,7 +127,12 @@ public class Fornecedores {
 
     public void setUf(String uf) {
         this.uf = uf;
+
     }
 
-    
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
+
 }
