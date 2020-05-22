@@ -395,18 +395,9 @@ public class FrmProdutos extends javax.swing.JFrame {
         jTabbedPane1.setSelectedIndex(0);
         txtCodigo.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 0).toString());  // linha e a coluna os parametros , codigo é a linha 0 
         txtDesc.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 1).toString());
-        txtRg.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 2).toString());
-        txtCpf.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 3).toString());
-        txtPreco.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 4).toString());
-        txtTelefone.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 5).toString());
-        txtCelular.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 6).toString());
-        txtEstoque.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 7).toString());
-        txtEndereco.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 8).toString());
-        txtNumero.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 9).toString());
-        txtComplemento.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 10).toString());
-        txtBairro.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 11).toString());
-        txtCidade.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 12).toString());
-        jComboBoxFornecedor.setSelectedItem(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 13).toString());
+        txtPreco.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 2).toString());
+        txtEstoque.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 3).toString());
+        jComboBoxFornecedor.setSelectedItem(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 4).toString());
 
 
     }//GEN-LAST:event_TabelaProdutosMouseClicked
@@ -548,6 +539,12 @@ public class FrmProdutos extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FrmProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
