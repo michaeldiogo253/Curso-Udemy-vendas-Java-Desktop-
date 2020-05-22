@@ -7,8 +7,10 @@ package br.projeto.view;
 
 import br.com.projeto.dao.ClienteDAO;
 import br.com.projeto.dao.FornecedoresDAO;
+import br.com.projeto.dao.ProdutosDAO;
 import br.com.projeto.model.Clientes;
 import br.com.projeto.model.Fornecedores;
+import br.com.projeto.model.Produtos;
 import br.com.projeto.model.Utilitarios;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -23,28 +25,18 @@ public class FrmProdutos extends javax.swing.JFrame {
      * Creates new form FrmCliente
      */
     public void listar() {
-        ClienteDAO dao = new ClienteDAO();
-        List<Clientes> lista = dao.listarClientes();
+        ProdutosDAO dao = new ProdutosDAO();
+        List<Produtos> lista = dao.listarProdutos();
         DefaultTableModel dados = (DefaultTableModel) TabelaProdutos.getModel();
         dados.setNumRows(0); // limpa os dados 
 
-        for (Clientes c : lista) {
+        for (Produtos c : lista) {
             dados.addRow(new Object[]{
                 c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCpf(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getUf()
-
+                c.getDescricao(),
+                c.getPreco(),
+                c.getQuantidade(),
+                c.getFornecedor().getNome()
             });
         }
     }
@@ -365,25 +357,19 @@ public class FrmProdutos extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
 
-        Clientes obj = new Clientes();
-        obj.setNome(txtDesc.getText());
-        obj.setRg(txtRg.getText());
-        obj.setCpf(txtCpf.getText());
-        obj.setEmail(txtPreco.getText());
-        obj.setTelefone(txtTelefone.getText());
-        obj.setCelular(txtCelular.getText());
-        obj.setCep(txtEstoque.getText());
-        obj.setEndereco(txtEndereco.getText());
-        obj.setNumero(Integer.parseInt(txtNumero.getText()));
-        obj.setComplemento(txtComplemento.getText());
-        obj.setBairro(txtBairro.getText());
-        obj.setCidade(txtCidade.getText());
-        obj.setUf(jComboBoxFornecedor.getSelectedItem().toString());
+        Produtos obj = new Produtos();
+        obj.setDescricao(txtDesc.getText());
+        obj.setPreco(Double.parseDouble(txtPreco.getText()));
+        obj.setQuantidade(Integer.parseInt(txtEstoque.getText()));
 
-        ClienteDAO dao = new ClienteDAO();
-        dao.cadastrarCliente(obj);
+        Fornecedores f = new Fornecedores();
+        f = (Fornecedores) jComboBoxFornecedor.getSelectedItem();
+        obj.setFornecedor(f);
+
+        ProdutosDAO dao = new ProdutosDAO();
+        dao.cadastrarProduto(obj);
         new Utilitarios().LimpaTela(painel_dados);
-        
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -397,32 +383,38 @@ public class FrmProdutos extends javax.swing.JFrame {
         txtDesc.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 1).toString());
         txtPreco.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 2).toString());
         txtEstoque.setText(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 3).toString());
-        jComboBoxFornecedor.setSelectedItem(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 4).toString());
+        Fornecedores f = new Fornecedores();
+        FornecedoresDAO dao = new FornecedoresDAO();
+        f = (Fornecedores) dao.buscaFornecedorPorNome(TabelaProdutos.getValueAt(TabelaProdutos.getSelectedRow(), 4).toString());
+        jComboBoxFornecedor.removeAllItems();
+        jComboBoxFornecedor.getModel().setSelectedItem(f);
 
 
     }//GEN-LAST:event_TabelaProdutosMouseClicked
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        Clientes obj = new Clientes();
-        obj.setNome(txtDesc.getText());
-        
-        obj.setUf(jComboBoxFornecedor.getSelectedItem().toString());
-
+        Produtos obj = new Produtos();
         obj.setId(Integer.parseInt(txtCodigo.getText()));
+        obj.setDescricao(txtDesc.getText());
+        obj.setPreco(Double.parseDouble(txtPreco.getText()));
+        obj.setQuantidade(Integer.parseInt(txtEstoque.getText()));
 
-        ClienteDAO dao = new ClienteDAO();
-        dao.alterarCliente(obj);
-        
+        Fornecedores f = new Fornecedores();
+        f = (Fornecedores) jComboBoxFornecedor.getSelectedItem();
+        obj.setFornecedor(f);
+
+        ProdutosDAO dao = new ProdutosDAO();
+        dao.alterarProduto(obj);
+
         new Utilitarios().LimpaTela(painel_dados);
-
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        Clientes obj = new Clientes();
+        Produtos obj = new Produtos();
         obj.setId(Integer.parseInt(txtCodigo.getText()));
-        ClienteDAO dao = new ClienteDAO();
-        dao.excluirCliente(obj);
-        
+        ProdutosDAO dao = new ProdutosDAO();
+        dao.excluirProduto(obj);
+
         new Utilitarios().LimpaTela(painel_dados);
 
 
@@ -430,64 +422,46 @@ public class FrmProdutos extends javax.swing.JFrame {
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         String nome = txtPesquisa.getText();
-        
-        ClienteDAO dao = new ClienteDAO();
-        List<Clientes> lista = dao.buscaClientePorNome(nome);
+
+        ProdutosDAO dao = new ProdutosDAO();
+        List<Produtos> lista = dao.buscaProdutoPorNome(nome);
         DefaultTableModel dados = (DefaultTableModel) TabelaProdutos.getModel();
         dados.setNumRows(0); // limpa os dados 
 
-        for (Clientes c : lista) {
+        for (Produtos c : lista) {
             dados.addRow(new Object[]{
                 c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCep(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getUf()
+                c.getDescricao(),
+                c.getPreco(),
+                c.getQuantidade(),
+                c.getFornecedor().getNome()
 
             });
         }
-        
+
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void txtPesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaKeyPressed
         // de acordo que vai digitando na barra de pesquisa vai apresentando os resutados
-        
-        String nome = "%"+txtPesquisa.getText()+"%";
-        
-        ClienteDAO dao = new ClienteDAO();
-        List<Clientes> lista = dao.buscaClientePorNome(nome);
+
+        String nome = "%" + txtPesquisa.getText() + "%";
+
+        ProdutosDAO dao = new ProdutosDAO();
+        List<Produtos> lista = dao.buscaProdutoPorNome(nome);
         DefaultTableModel dados = (DefaultTableModel) TabelaProdutos.getModel();
         dados.setNumRows(0); // limpa os dados 
 
-        for (Clientes c : lista) {
+         for (Produtos c : lista) {
             dados.addRow(new Object[]{
                 c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCep(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getUf()
+                c.getDescricao(),
+                c.getPreco(),
+                c.getQuantidade(),
+                c.getFornecedor().getNome()
 
             });
         }
-       
+
     }//GEN-LAST:event_txtPesquisaKeyPressed
 
     private void txtPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisaActionPerformed
@@ -496,7 +470,7 @@ public class FrmProdutos extends javax.swing.JFrame {
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         new Utilitarios().LimpaTela(painel_dados);
-        
+
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void txtDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescActionPerformed
@@ -505,13 +479,13 @@ public class FrmProdutos extends javax.swing.JFrame {
 
     private void jComboBoxFornecedorAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jComboBoxFornecedorAncestorAdded
         FornecedoresDAO dao = new FornecedoresDAO();
-        List <Fornecedores> listadeFornecedores = dao.listarFornecedores();
+        List<Fornecedores> listadeFornecedores = dao.listarFornecedores();
         jComboBoxFornecedor.removeAll();
-        
-        for(Fornecedores f : listadeFornecedores){
+
+        for (Fornecedores f : listadeFornecedores) {
             jComboBoxFornecedor.addItem(f);
         }
-        
+
     }//GEN-LAST:event_jComboBoxFornecedorAncestorAdded
 
     /**
