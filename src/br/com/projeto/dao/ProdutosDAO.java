@@ -146,4 +146,30 @@ public class ProdutosDAO {
 
     }
 
+    public Produtos buscaProdutoPorCodigo(int codigo) {
+
+        try {
+
+            String SQL = "select * from tb_produtos where id = '" + codigo + "'";
+            PreparedStatement stmt = con.prepareStatement(SQL);
+            ResultSet rs = stmt.executeQuery(SQL);
+            Produtos obj = new Produtos();
+            while (rs.next()) {
+
+                obj.setId(rs.getInt("id"));
+                obj.setDescricao(rs.getString("descricao"));
+                obj.setPreco(rs.getDouble("preco"));
+                obj.setQuantidade(rs.getInt("qtd_estoque"));
+                ;
+            }
+
+            return obj;
+
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro" + erro);
+            return null;
+        }
+
+    }
+
 }

@@ -55,10 +55,9 @@ public class ClienteDAO {
 
     public void alterarCliente(Clientes obj) {
 
-         try {
+        try {
             String SQL = "update tb_clientes set nome=?,rg=?,cpf=?,email=?,telefone=?,celular=?,cep=?,endereco=?,numero=?,complemento=?,bairro=?,cidade=?,"
-                    + "estado=? where id=?"
-                    ;
+                    + "estado=? where id=?";
 
             PreparedStatement stmt = con.prepareStatement(SQL);
             stmt.setString(1, obj.getNome());
@@ -85,17 +84,15 @@ public class ClienteDAO {
 
         }
 
-        
     }
 
     public void excluirCliente(Clientes obj) {
 
-         try {
+        try {
             String SQL = "delete from tb_clientes where id = ?";
 
             PreparedStatement stmt = con.prepareStatement(SQL);
             stmt.setInt(1, obj.getId());
-            
 
             stmt.execute();
             stmt.close();
@@ -106,8 +103,6 @@ public class ClienteDAO {
 
         }
 
-        
-        
     }
 
     public List<Clientes> listarClientes() {
@@ -150,12 +145,11 @@ public class ClienteDAO {
 
         try {
             List<Clientes> lista = new ArrayList<>();  // criar a lista
-            String SQL = "select * from tb_clientes where nome like '%"+ nome +"%'";                       
+            String SQL = "select * from tb_clientes where nome like '%" + nome + "%'";
             PreparedStatement stmt = con.prepareStatement(SQL);
-           // stmt.setString(1, nome);
+            // stmt.setString(1, nome);
             ResultSet rs = stmt.executeQuery(SQL);
-              
-            
+
             while (rs.next()) {
                 Clientes obj = new Clientes();
                 obj.setId(rs.getInt("id"));
@@ -171,7 +165,7 @@ public class ClienteDAO {
                 obj.setComplemento(rs.getString("complemento"));
                 obj.setBairro(rs.getString("bairro"));
                 obj.setCidade(rs.getString("cidade"));
-                obj.setUf(rs.getString("estado")); // pode ser uf 
+                obj.setUf(rs.getString("estado")); 
                 lista.add(obj);
             }
 
@@ -183,5 +177,76 @@ public class ClienteDAO {
         }
 
     }
+
+    public Clientes consultaPorNome(String nome) {
+
+        try {
+            String SQL = "select * from tb_clientes where nome like '%" + nome + "%'";
+            PreparedStatement stmt = con.prepareStatement(SQL);
+            // stmt.setString(1, nome);
+            ResultSet rs = stmt.executeQuery(SQL);
+            Clientes obj = new Clientes();
+
+            while (rs.next()) {
+
+                obj.setId(rs.getInt("id"));
+                obj.setNome(rs.getString("nome"));
+                obj.setRg(rs.getString("rg"));
+                obj.setCpf(rs.getString("cpf"));
+                obj.setEmail(rs.getString("email"));
+                obj.setTelefone(rs.getString("telefone"));
+                obj.setCelular(rs.getString("celular"));
+                obj.setCep(rs.getString("cep"));
+                obj.setEndereco(rs.getString("endereco"));
+                obj.setNumero(rs.getInt("numero"));
+                obj.setComplemento(rs.getString("complemento"));
+                obj.setBairro(rs.getString("bairro"));
+                obj.setCidade(rs.getString("cidade"));
+                obj.setUf(rs.getString("estado")); 
+
+            }
+
+            return obj;
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro" + erro);
+            return null;
+        }
+    }
     
+    
+    public Clientes consultaPorCPF(String cpf) {
+
+        try {
+            String SQL = "select * from tb_clientes where cpf ='" + cpf + "'";
+            PreparedStatement stmt = con.prepareStatement(SQL);
+            // stmt.setString(1, nome);
+            ResultSet rs = stmt.executeQuery(SQL);
+            Clientes obj = new Clientes();
+
+            while (rs.next()) {
+
+                obj.setId(rs.getInt("id"));
+                obj.setNome(rs.getString("nome"));
+                obj.setRg(rs.getString("rg"));
+                obj.setCpf(rs.getString("cpf"));
+                obj.setEmail(rs.getString("email"));
+                obj.setTelefone(rs.getString("telefone"));
+                obj.setCelular(rs.getString("celular"));
+                obj.setCep(rs.getString("cep"));
+                obj.setEndereco(rs.getString("endereco"));
+                obj.setNumero(rs.getInt("numero"));
+                obj.setComplemento(rs.getString("complemento"));
+                obj.setBairro(rs.getString("bairro"));
+                obj.setCidade(rs.getString("cidade"));
+                obj.setUf(rs.getString("estado")); 
+
+            }
+
+            return obj;
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro" + erro);
+            return null;
+        }
+    }
+
 }

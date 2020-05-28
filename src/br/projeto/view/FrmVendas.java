@@ -1,17 +1,25 @@
-
 package br.projeto.view;
 
+import br.com.projeto.dao.ClienteDAO;
+import br.com.projeto.dao.ProdutosDAO;
+import br.com.projeto.model.Clientes;
+import br.com.projeto.model.Produtos;
+import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.table.DefaultTableModel;
 
 public class FrmVendas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmVendas
-     */
+    double total, preco, subtotal;
+    int qtd;
+    DefaultTableModel carrinho;
+    
+    
     public FrmVendas() {
         initComponents();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -47,7 +55,7 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         txtPreco = new javax.swing.JTextField();
         txtQuantidade = new javax.swing.JTextField();
-        txtNome13 = new javax.swing.JTextField();
+        txtCod = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnPesquisarP = new javax.swing.JButton();
@@ -160,8 +168,13 @@ public class FrmVendas extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela Vendas");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Cliente")));
@@ -175,6 +188,11 @@ public class FrmVendas extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         txtCpf.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtCpf.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCpfKeyPressed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Nome");
@@ -184,6 +202,7 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Data");
 
+        txtData.setEditable(false);
         txtData.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         btnPesquisarC.setBackground(new java.awt.Color(255, 255, 255));
@@ -291,7 +310,7 @@ public class FrmVendas extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -310,6 +329,7 @@ public class FrmVendas extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel15.setText("Preço");
 
+        txtPreco.setEditable(false);
         txtPreco.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         txtQuantidade.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -319,7 +339,12 @@ public class FrmVendas extends javax.swing.JFrame {
             }
         });
 
-        txtNome13.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtCod.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtCod.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodKeyPressed(evt);
+            }
+        });
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel16.setText("Qtd");
@@ -364,7 +389,7 @@ public class FrmVendas extends javax.swing.JFrame {
                                         .addComponent(jLabel13)
                                         .addGap(18, 18, 18)))
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNome13, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel5Layout.createSequentialGroup()
                                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -385,7 +410,7 @@ public class FrmVendas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(txtNome13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
@@ -433,6 +458,11 @@ public class FrmVendas extends javax.swing.JFrame {
 
         btnPagamento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnPagamento.setText("PAGAMENTO");
+        btnPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagamentoActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnCancelar.setText("CANCELAR VENDA");
@@ -491,32 +521,6 @@ public class FrmVendas extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNome4ActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        String nome = txtPesquisa.getText();
-
-        ClienteDAO dao = new ClienteDAO();
-        List<Clientes> lista = dao.buscaClientePorNome(nome);
-        DefaultTableModel dados = (DefaultTableModel) TabelaClientes.getModel();
-        dados.setNumRows(0); // limpa os dados
-
-        for (Clientes c : lista) {
-            dados.addRow(new Object[]{
-                c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCep(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getUf()
-
-            });
-        }
 
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
@@ -525,7 +529,11 @@ public class FrmVendas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisar1ActionPerformed
 
     private void btnPesquisarCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCActionPerformed
-        // TODO add your handling code here:
+
+        Clientes obj = new Clientes();
+        ClienteDAO dao = new ClienteDAO();
+        obj = dao.consultaPorCPF(txtCpf.getText());
+        txtNomeCliente.setText(obj.getNome());
     }//GEN-LAST:event_btnPesquisarCActionPerformed
 
     private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed
@@ -533,12 +541,69 @@ public class FrmVendas extends javax.swing.JFrame {
     }//GEN-LAST:event_txtQuantidadeActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        qtd = Integer.parseInt(txtQuantidade.getText());
+        preco = Double.parseDouble(txtPreco.getText());
+        subtotal = qtd * preco;
+        total+= subtotal;
+        txtTotal.setText(String.valueOf(total));
+        
+        carrinho = (DefaultTableModel) TabelaItens.getModel();
+        
+        carrinho.addRow(new Object[]{
+        
+            txtCod.getText(),
+            txtDescricao.getText(),
+            txtQuantidade.getText(),
+            txtPreco.getText(),
+            subtotal
+            
+    });
+        
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnPesquisarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarPActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPesquisarPActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        Date agora = new Date();
+        SimpleDateFormat databr = new SimpleDateFormat("dd/MM/yyyy");
+        String dataFormatada = databr.format(agora);
+        txtData.setText(dataFormatada);
+
+    }//GEN-LAST:event_formWindowActivated
+
+    private void txtCpfKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCpfKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            Clientes obj = new Clientes();
+            ClienteDAO dao = new ClienteDAO();
+            obj = dao.consultaPorCPF(txtCpf.getText());
+            txtNomeCliente.setText(obj.getNome());
+
+        }
+
+
+    }//GEN-LAST:event_txtCpfKeyPressed
+
+    private void txtCodKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            Produtos obj = new Produtos();
+            ProdutosDAO dao = new ProdutosDAO();
+            obj = dao.buscaProdutoPorCodigo(Integer.parseInt(txtCod.getText()));
+            txtDescricao.setText(obj.getDescricao());
+            txtPreco.setText(String.valueOf(obj.getPreco())); // converter o valor que vem do banco para string
+
+        }
+
+    }//GEN-LAST:event_txtCodKeyPressed
+
+    private void btnPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagamentoActionPerformed
+        FrmPagamentos telap = new FrmPagamentos();
+        telap.txtTotal.setText(String.valueOf(total));
+        telap.setVisible(true);
+        this.dispose();
+        
+    }//GEN-LAST:event_btnPagamentoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -551,7 +616,7 @@ public class FrmVendas extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -604,10 +669,10 @@ public class FrmVendas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtCod;
     private javax.swing.JFormattedTextField txtCpf;
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtDescricao;
-    private javax.swing.JTextField txtNome13;
     private javax.swing.JTextField txtNome2;
     private javax.swing.JTextField txtNome3;
     private javax.swing.JTextField txtNome4;
