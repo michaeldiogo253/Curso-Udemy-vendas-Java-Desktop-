@@ -14,7 +14,7 @@ public class FrmVendas extends javax.swing.JFrame {
     double total, preco, subtotal;
     int qtd;
     DefaultTableModel carrinho;
-    
+    Clientes obj = new Clientes();
     
     public FrmVendas() {
         initComponents();
@@ -575,7 +575,7 @@ public class FrmVendas extends javax.swing.JFrame {
 
     private void txtCpfKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCpfKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            Clientes obj = new Clientes();
+            
             ClienteDAO dao = new ClienteDAO();
             obj = dao.consultaPorCPF(txtCpf.getText());
             txtNomeCliente.setText(obj.getNome());
@@ -600,6 +600,7 @@ public class FrmVendas extends javax.swing.JFrame {
     private void btnPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagamentoActionPerformed
         FrmPagamentos telap = new FrmPagamentos();
         telap.txtTotal.setText(String.valueOf(total));
+        telap.cliente = obj;
         telap.setVisible(true);
         this.dispose();
         
