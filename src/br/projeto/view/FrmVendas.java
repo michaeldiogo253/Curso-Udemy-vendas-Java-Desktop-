@@ -601,6 +601,7 @@ public class FrmVendas extends javax.swing.JFrame {
         FrmPagamentos telap = new FrmPagamentos();
         telap.txtTotal.setText(String.valueOf(total));
         telap.cliente = obj;
+        telap.carrinho = carrinho;
         telap.setVisible(true);
         this.dispose();
         
