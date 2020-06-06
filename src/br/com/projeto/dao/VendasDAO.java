@@ -30,7 +30,7 @@ public class VendasDAO {
 
             stmt.execute();
             stmt.close();
-            JOptionPane.showMessageDialog(null, "Venda registrada com sucesso!");
+            //JOptionPane.showMessageDialog(null, "Venda registrada com sucesso!");
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar !" + e);

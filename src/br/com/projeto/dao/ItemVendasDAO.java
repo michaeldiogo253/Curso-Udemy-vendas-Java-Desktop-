@@ -31,7 +31,7 @@ public class ItemVendasDAO {
 
             stmt.execute();
             stmt.close();
-            JOptionPane.showMessageDialog(null, "Item registrado com sucesso!");
+           
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar !" + e);

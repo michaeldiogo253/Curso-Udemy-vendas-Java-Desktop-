@@ -5,11 +5,16 @@
  */
 package br.projeto.view;
 
+import br.com.projeto.dao.ItemVendasDAO;
+import br.com.projeto.dao.ProdutosDAO;
 import br.com.projeto.dao.VendasDAO;
 import br.com.projeto.model.Clientes;
+import br.com.projeto.model.ItemVendas;
+import br.com.projeto.model.Produtos;
 import br.com.projeto.model.Vendas;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -199,6 +204,7 @@ public class FrmPagamentos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+       
         double pcartao, pcheque, pdinheiro, totalpago, totalvenda, troco;
 
         pcartao = Double.parseDouble(txtCartao.getText());
@@ -225,6 +231,34 @@ public class FrmPagamentos extends javax.swing.JFrame {
         VendasDAO daoV = new VendasDAO();
         daoV.cadastrarVenda(objv);
         objv.setId(daoV.retornaUltimaVenda());
+        
+        // cadastrar produtos na tabela iten vendas
+        
+        for(int i =0 ;i < carrinho.getRowCount();i++){
+            
+            int qtdComprada, qtdAtualizada , qtdEstoque;
+            Produtos objp = new Produtos();
+            ProdutosDAO daoP = new ProdutosDAO();
+            
+            ItemVendas item = new ItemVendas();
+            item.setVenda(objv);
+            
+            // obs os valores o e 2 passados nos metodos abaixo representam a colina da tabela carrinho, ex cloluna 0 é a primeira a do ID e a 2 é a QTD
+            objp.setId(Integer.parseInt(carrinho.getValueAt(i, 0).toString()));
+            item.setProduto(objp);
+            item.setQtd(Integer.parseInt(carrinho.getValueAt(i, 2).toString()));
+            item.setSubtotal(Double.parseDouble(carrinho.getValueAt(i, 4).toString()));
+            
+            qtdEstoque = daoP.retornaEstoqueAtual(objp.getId());
+            qtdComprada = Integer.parseInt(carrinho.getValueAt(i, 2).toString());
+            qtdAtualizada = qtdEstoque - qtdComprada;
+            daoP.baixaEstoque(objp.getId(), qtdAtualizada);
+            
+            ItemVendasDAO daoItem = new ItemVendasDAO();
+            daoItem.CadastrarItem(item);
+            
+        }
+        JOptionPane.showMessageDialog(null, "Venda cadastrada com sucesso !!!");
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     /**
