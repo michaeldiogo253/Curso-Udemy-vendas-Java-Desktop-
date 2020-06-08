@@ -5,6 +5,14 @@
  */
 package br.projeto.view;
 
+import br.com.projeto.dao.VendasDAO;
+import br.com.projeto.model.Vendas;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author michael
@@ -118,13 +126,14 @@ public class FrmHistorico extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtDataInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
                         .addComponent(txtDataFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnPesquisar)))
+                        .addComponent(btnPesquisar))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(txtDataInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
 
@@ -162,10 +171,32 @@ public class FrmHistorico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-      
+        try {
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate data_inicio = LocalDate.parse(txtDataInicial.getText(), formato);
+            LocalDate data_final = LocalDate.parse(txtDataFinal.getText(), formato);
 
-       
-        
+            VendasDAO dao = new VendasDAO();
+            List<Vendas> lista = dao.listarVendasPorPeriodo(data_inicio, data_final);
+
+            DefaultTableModel dados = (DefaultTableModel) TabelaHistorico.getModel();
+            dados.setNumRows(0);
+
+            for (Vendas v : lista) {
+                dados.addRow(new Object[]{
+                    v.getId(),
+                    v.getDataVenda(),
+                    v.getCliente().getNome(),
+                    v.getTotalVenda(),
+                    v.getObs()
+                });
+
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Digite as datas como intervalo" + e);
+        }
+
 
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
@@ -180,7 +211,7 @@ public class FrmHistorico extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
