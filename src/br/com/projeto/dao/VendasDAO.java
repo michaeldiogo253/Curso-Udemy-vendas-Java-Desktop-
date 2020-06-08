@@ -81,7 +81,6 @@ public class VendasDAO {
                 Vendas obj = new Vendas();
                 Clientes c = new Clientes();
                 
-                System.out.println(rs.getString("data_formatada"));
                 
                 obj.setId(rs.getInt("v.id"));
                 obj.setDataVenda(rs.getString("data_formatada"));
